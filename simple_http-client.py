@@ -27,15 +27,13 @@ with requests.Session() as s:
     #print(r.content) # to find name of csrf_token and form_build_id
     soup = BeautifulSoup(r.text, 'lxml')
     csrf_token = soup.find('input',attrs = {'name':'csrf_token'})['value']
-
-
     login_data['csrf_token'] = csrf_token
-
+   
     r = s.post(url,data=login_data, headers = headers, allow_redirects=True)
 
     if 'login' in r.text:
         print ('Failed!')
-        print(':: Script Exiting ...')
+        print('Script Exiting ...')
     elif 'logout' in r.text:
         print('Logged in')
         print('Script Exiting ...')
