@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 import requests
 from bs4 import BeautifulSoup
 
@@ -13,24 +12,24 @@ headers = {
     'Accept-Language': 'en-US,en;q=0.9',
     'Connection': 'close'
 }
-# Request Body Parameters from Request Body/ page source
+# Request Body Parameters from Request Body or page source
 login_data = {
              'username' : 'username',
              'password' : 'pass',
              'grant_type' : 'password',
              'continue' : 'https://account.shodan.io/'
   }
-
 with requests.Session() as s:
     url = 'https://account.shodan.io/login'
     r = s.get(url,headers=headers)
-    #print(r.content) # to find name of csrf_token and form_build_id
+    #print(r.content) # to find name of csrf_token or other form data
     soup = BeautifulSoup(r.text, 'lxml')
     csrf_token = soup.find('input',attrs = {'name':'csrf_token'})['value']
     login_data['csrf_token'] = csrf_token
-   
+    
+   #post request with all the params
     r = s.post(url,data=login_data, headers = headers, allow_redirects=True)
-
+   #a check to see if you're logged in
     if 'login' in r.text:
         print ('Failed!')
         print('Script Exiting ...')
